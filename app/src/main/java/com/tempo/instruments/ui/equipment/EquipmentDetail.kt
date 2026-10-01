@@ -12,15 +12,19 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.tempo.instruments.data.Machine
 import com.tempo.instruments.data.MachineReading
 import com.tempo.instruments.ui.dashboard.MachineStatus
-@Composable
-fun EquipmentDetailScreen(machine: Machine, readings: List<MachineReading>, modifier: Modifier = Modifier){
-    val scrollState = rememberScrollState()
+import kotlinx.coroutines.flow.Flow
+import androidx.compose.runtime.getValue
 
+@Composable
+fun EquipmentDetailScreen(machine: Machine, readings: Flow<List<MachineReading>>, modifier: Modifier = Modifier){
+    val scrollState = rememberScrollState()
+    val machineReadings by readings.collectAsState(initial = emptyList())
     Column(modifier = modifier.fillMaxSize().verticalScroll(scrollState).padding(16.dp)) {
         Text(text = machine.name, style = MaterialTheme.typography.headlineSmall)
         Text(text = "Machine ID: ${machine.id}", style = MaterialTheme.typography.bodyMedium)
@@ -47,7 +51,7 @@ fun EquipmentDetailScreen(machine: Machine, readings: List<MachineReading>, modi
             Column(modifier= Modifier.padding(16.dp)){
                 Text(text="Temperature History", style= MaterialTheme.typography.titleMedium)
                 Spacer(modifier= Modifier.height(16.dp))
-                TemperatureChart(readings=readings)
+                TemperatureChart(readings=machineReadings)
             }
         }
     }

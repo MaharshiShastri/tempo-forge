@@ -16,7 +16,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.tempo.instruments.viewmodel.DashboardModelView
+import com.tempo.instruments.viewmodel.DashboardViewModelFactory
+import com.tempo.instruments.viewmodel.DashboardViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?){
@@ -28,14 +29,38 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TempoApp(dashboardModelView: DashboardModelView = viewModel()){
+fun TempoApp() {
 
-    val machines by dashboardModelView.machines.collectAsState()
-    val readings by dashboardModelView.readings.collectAsState()
+    val application = androidx.compose.ui.platform.LocalContext.current
+        .applicationContext as TempoApplication
 
-    Scaffold(topBar = {TopAppBar(title={Text("Tempo Instruments")})}) {innerPadding ->
-        Box(modifier = Modifier.padding(innerPadding)){
-            AppNavigation(machines=machines, readings=readings)
+    val dashboardViewModel: DashboardViewModel = viewModel(
+        factory = DashboardViewModelFactory(
+            application.appContainer.repository
+        )
+    )
+
+    val machines by dashboardViewModel.machines.collectAsState()
+    val errors by dashboardViewModel.errors.collectAsState()
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text("Tempo Instruments")
+                }
+            )
+        }
+    ) { innerPadding ->
+
+        Box(
+            modifier = Modifier.padding(innerPadding)
+        ) {
+            AppNavigation(
+                machines = machines,
+                errors = errors,
+                dashboardViewModel = dashboardViewModel
+            )
         }
     }
 }

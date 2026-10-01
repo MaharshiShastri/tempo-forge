@@ -18,16 +18,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.tempo.instruments.data.Machine
+import androidx.compose.material3.Button
 
 @Composable
 fun DashboardScreen(
     machines: List<Machine>,
     onMachineClick: (Machine) -> Unit,
+    onErrorsClick: () -> Unit,
     modifier: Modifier = Modifier
 ){
     Column(modifier = modifier.fillMaxSize().padding(16.dp)){
         Text(text="Your Equipment", style= MaterialTheme.typography.headlineSmall)
         Spacer(modifier=Modifier.height(16.dp))
+        Button(onClick = onErrorsClick, modifier = Modifier.fillMaxWidth()){Text("Errors & Alerts")}
         LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
             items(items=machines, key={machine -> machine.id}){
                 machine ->
