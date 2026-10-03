@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.tempo.instruments.data.MachineReading
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -19,4 +18,7 @@ interface MachineReadingDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertReadings(readings: List<MachineReadingEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertReading(reading: MachineReadingEntity)
 }

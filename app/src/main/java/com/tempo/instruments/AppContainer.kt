@@ -1,6 +1,7 @@
 package com.tempo.instruments
 
 import com.tempo.instruments.database.TempoDatabase
+import com.tempo.instruments.repository.NetworkTempoDataSource
 import com.tempo.instruments.repository.RoomTempoDataSource
 import com.tempo.instruments.repository.TempoDataSource
 import com.tempo.instruments.repository.TempoRepository
@@ -13,11 +14,16 @@ class AppContainer(
         RoomTempoDataSource(
             machineDao = database.machineDao(),
             readingDao = database.machineReadingDao(),
-            errorDao = database.errorEventDao()
+            errorDao = database.errorEventDao(),
+            networkConfigurationDao = database.networkConfigurationDao()
         )
     }
 
-    val repository: TempoRepository by lazy {
-        TempoRepository(dataSource)
+    private val networkTempoDataSource: NetworkTempoDataSource by lazy{
+        NetworkTempoDataSource()
     }
+    val repository: TempoRepository by lazy {
+        TempoRepository(dataSource, networkTempoDataSource = networkTempoDataSource)
+    }
+
 }

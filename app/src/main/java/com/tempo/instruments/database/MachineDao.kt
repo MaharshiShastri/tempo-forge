@@ -19,4 +19,7 @@ interface MachineDao{
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMachine(machine: MachineEntity)
+
+    @Query("UPDATE machines SET temperature = :temperature, pressure = :pressure, isOnline = :isOnline WHERE id = :machineId")
+    suspend fun updateTelemetry(machineId: String, temperature: Double, pressure: Double, isOnline: Boolean): Int
 }

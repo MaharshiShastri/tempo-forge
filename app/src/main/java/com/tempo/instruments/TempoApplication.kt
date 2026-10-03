@@ -15,7 +15,9 @@ class TempoApplication : Application() {
             applicationContext,
             TempoDatabase::class.java,
             "tempo_forge.db"
-        ).build()
+        )
+            .fallbackToDestructiveMigration()
+            .build()
     }
 
     val appContainer: AppContainer by lazy {
